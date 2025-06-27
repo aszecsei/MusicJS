@@ -1,0 +1,1 @@
+com.aszecsei.musicjs.MusicJSPlugin
