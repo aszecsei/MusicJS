@@ -12,7 +12,7 @@ public class Config
 
     private static final ForgeConfigSpec.BooleanValue ENABLE_LOGGING = BUILDER
             .comment("Whether to log the music choice process")
-            .define("enableLogging", true);
+            .define("enableLogging", false);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 

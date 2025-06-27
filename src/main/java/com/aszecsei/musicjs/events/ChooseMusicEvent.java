@@ -61,6 +61,6 @@ public class ChooseMusicEvent extends ClientEventJS {
 
     @Info("Whether or not music is currently playing")
     public boolean isPlayingMusic() {
-        return Minecraft.getInstance().getSoundManager().isActive(currentMusic());
+        return currentMusic() != null;
     }
 }

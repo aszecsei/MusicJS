@@ -6,5 +6,5 @@ import dev.latvian.mods.kubejs.event.EventHandler;
 public interface MusicEvents {
     EventGroup GROUP = EventGroup.of("MusicEvents");
 
-    EventHandler CHOOSE_MUSIC = MusicEvents.GROUP.client("choose_music", () -> ChooseMusicEvent.class);
+    EventHandler CHOOSE_MUSIC = MusicEvents.GROUP.client("chooseMusic", () -> ChooseMusicEvent.class);
 }
