@@ -60,3 +60,71 @@ ClientEvents.leftDebugInfo(event => {
     event.lines.push(`Currently playing: ${$Minecraft.getInstance().musicManager.musicjs$getCurrentMusic()?.location ?? "[nothing]"}`)
 })
 ```
+
+## Adding Custom Songs
+
+As an example, let's say we want to (rarely, as an easter egg) play a song `deep_stone_lullaby.ogg` when it's nighttime and we're in the overworld.
+
+First, we need to add it to our `assets/kubejs/sounds/music/game` folder. Then create or edit a `assets/kubejs/sounds.json` file
+to register it as a sound:
+
+```json
+{
+  "music.kubejs.overworld.night": {
+    "sounds": [
+      {
+        "name": "music/game/deep_stone_lullaby",
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
+  }
+}
+```
+
+*Then*, in a startup script, we need to register the actual sound event:
+
+```js
+// startup_scripts/registry/sound_events.js
+
+StartupEvents.registry('sound_event', event => {
+  let music = [
+    'overworld.night',
+  ]
+  music.forEach(key => {
+    event.create(`music.kubejs.${key}`);
+  });
+})
+```
+
+Now that we have a sound event, we can tell MusicJS to play it under certain conditions:
+
+```js
+// client_scripts/music.js
+
+MusicEvents.chooseMusic((event) => {
+  if (event.playingMusic) {
+    return;
+  } // Avoid any work while music is playing
+  if (event.player == null) {
+    return;
+  } // Don't mess with menus
+
+  if (event.player.level.dimension == "minecraft:overworld") { // If we're in the overworld...
+    if (event.player.level.night) { // ...and it's nighttime...
+      event.add(
+        1, // ...low (~1%) chance of playing our easter egg music instead of vanilla music.
+        Music.of(
+          "kubejs:music.kubejs.overworld.night",
+          20 * 60 * 60 * 5,  // min delay: 5 minutes
+          20 * 60 * 60 * 10, // max delay: 10 minutes
+          false              // shouldn't interrupt currently-playing music
+        )
+      );
+    }
+  }
+}
+```
+
+You can add or remove whatever sound events you like. For example, you might remove all other songs
+from the pool and add in an interrupting boss fight track with zero delay when a wither is nearby.
